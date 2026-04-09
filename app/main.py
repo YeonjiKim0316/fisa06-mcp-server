@@ -224,6 +224,8 @@ async def chat_stream(request: Request, query: str):
                     yield f"data: {json.dumps({'type': 'tool_start', 'content': f'도구 사용: {tool_name}'})}\n\n"
                 elif kind == "on_tool_end":
                     tool_name = event["name"]
+                    tool_output = event.get("data", {}).get("output", "")
+                    print(f"[TOOL RESULT] {tool_name}: {str(tool_output)[:500]}", flush=True)
                     yield f"data: {json.dumps({'type': 'tool_end', 'content': f'도구 완료: {tool_name}'})}\n\n"
 
             # clarify_node처럼 토큰 스트림이 없는 경우 최종 AI 메시지를 보강 전송

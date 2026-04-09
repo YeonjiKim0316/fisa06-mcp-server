@@ -1,3 +1,24 @@
+# stdio 방식 추가
+# requrements에 wikipedia-mcp 추가
+# agent/supervisor_graph에 
+
+        # "wikipedia": {
+        #     "command": "wikipedia-mcp",
+        #     "args": [],
+        #     "transport": "stdio"
+        # },
+        # "tavily": {
+        #     "url": f"https://mcp.tavily.com/mcp/?tavilyApiKey={os.environ.get('TAVILY_API_KEY', '')}",
+        #     "transport": "streamable_http"
+        # }
+
+# api에
+# https://docs.tavily.com/documentation/mcp
+# - TAVILY_API_KEY=${TAVILY_API_KEY}
+
+# Dockerfile 에 "--reload" 추가 후
+# docker compose down api
+# docker compose up --build -d
 version: '3.8'
 
 services:
@@ -31,6 +52,7 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - LANGSMITH_API_KEY=${LANGSMITH_API_KEY}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
     volumes:
       - .:/app
     depends_on:

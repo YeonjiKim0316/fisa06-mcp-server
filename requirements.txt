@@ -15,3 +15,4 @@ langchain_mcp_adapters
 langgraph-checkpoint-sqlite
 pytest
 itsdangerous
+wikipedia-mcp

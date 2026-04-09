@@ -23,7 +23,7 @@ def _get_retriever():
         embeddings = OpenAIEmbeddings()
         vector_store = ElasticsearchStore(
             es_url=ELASTICSEARCH_URL,
-            index_name="llm_rag_index",
+            index_name="llm_*_index", ################# 수정
             embedding=embeddings,
         )
         _retriever = vector_store.as_retriever(search_kwargs={"k": 3})
