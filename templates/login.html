@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Login | LLM Agent{% endblock %}
+
+{% block body_class %}bg-light d-flex align-items-center{% endblock %}
+{% block body_style %}min-height: 100vh;{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h4 class="mb-1"><i class="bi bi-person-circle"></i> 로그인</h4>
+                        <p class="text-muted mb-4">세션별 대화 저장을 위해 이름을 입력하세요.</p>
+
+                        {% if error %}
+                        <div class="alert alert-danger py-2">{{ error }}</div>
+                        {% endif %}
+
+                        <form method="post" action="/login">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">사용자 이름</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="username"
+                                    name="username"
+                                    placeholder="예: test"
+                                    required
+                                >
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-box-arrow-in-right"></i> 로그인 시작
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

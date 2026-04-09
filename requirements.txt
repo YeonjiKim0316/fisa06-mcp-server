@@ -1,0 +1,17 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+langchain-openai>=0.1.0
+langchain-elasticsearch
+langchain>=0.1.0
+langgraph
+langsmith
+python-dotenv
+langchain-community
+langchain-text-splitters
+openai>=1.0.0
+langchain_mcp_adapters
+langgraph-checkpoint-sqlite
+pytest
+itsdangerous
