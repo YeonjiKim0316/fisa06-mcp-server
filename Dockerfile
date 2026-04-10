@@ -26,4 +26,5 @@ USER appuser
 
 EXPOSE 8000
 
+# 배포시에는 --reload 는 코드를 고칠 때마다 다시 읽어와라는 뜻이므로 절대 쓰지 않습니다.
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

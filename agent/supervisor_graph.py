@@ -23,8 +23,8 @@ load_dotenv()
 
 # System prompts - 
 SUPERVISOR_PROMPT = """당신은 스마트 라우터(Supervisor)입니다. 
-- "rag_worker": Kanye West(칸예, 칸예웨스트)의 정보나 Langchain, Langgraph, RAG 등 문서나 패키지 사용법 등 개발/도큐먼트와 관련된 질문일 때
-- "mcp_worker": 날씨, 주식 정보 등 실시간 외부 데이터를 요구하거나, 최신 뉴스/트렌드 검색이 필요하거나, 정수끼리 더할 때
+- "rag_worker": 칸예웨스트(Kanye West), 칸예에 대한 정보나 Langchain, Langgraph, RAG 등 문서나 패키지 사용법 등 개발/도큐먼트와 관련된 질문일 때
+- "mcp_worker": 날씨, 주식 정보 등 실시간 외부 데이터를 요구하거나, 외부 정보에 대한 검색이 필요할 때 정수끼리 더할 때
 - "clarify_worker": 질문이 너무 짧거나 모호해서 어떤 워커로 보낼지 확신이 없을 때
 - "dummy_worker": 사용자가 **짱구**라는 단어를 말했을 때
 사용자의 질문을 분석하여 다음 네 워커 중 하나에게 질문을 전달하세요:
@@ -38,25 +38,24 @@ class RouteResponse(TypedDict):
 # MCP 클라이언트
 client = None
 
-try:
+try: # https://mcp.tavily.com/mcp/?tavilyApiKey=<your-api-key>
     client = MultiServerMCPClient({
         "fisa-mcp": {
             # "url": "http://localhost:7860/mcp",
-            "url": "https://mcp-server-fisa06.onrender.com/mcp",
+            "url": "https://thisispaperdoll-new11111.hf.space/mcp",
+            "transport": "streamable_http"
+        },
+        "tavily-mcp": {
+            "url": f"https://mcp.tavily.com/mcp/?tavilyApiKey={os.environ.get('TAVILY_API_KEY')}",
             "transport": "streamable_http"
         },
         "wikipedia": {
             "command": "wikipedia-mcp",
-            "args": [],
-            "transport": "stdio"
-        },
-        "tavily": {
-            "url": f"https://mcp.tavily.com/mcp/?tavilyApiKey={os.environ.get('TAVILY_API_KEY', '')}",
-            "transport": "streamable_http"
+            "transport": "stdio",
+            "args": []
         }
     })
     print("✅ MCP 클라이언트 초기화 완료 (Supervisor)")
-    print(os.environ.get('TAVILY_API_KEY'))
 except Exception as e:
     print(f"⚠️ MCP 클라이언트 초기화 실패 (Supervisor): {e}")
 
@@ -69,8 +68,8 @@ async def create_supervisor_app(checkpointer=None):
         llm, 
         tools=[retriever_tool], 
         system_prompt="""당신은 RAG 시스템 질문에 답변하는 전문가 워커입니다. 주어진 retriever 도구를 최대한 활용해 답변하세요. 
-        retirever로 검색된 결과가 없으면 지어내지 말고 모른다고 답하고, 
-        있는 문서는 출처를 출력하세요."""
+                      retirever로 검색된 결과가 없으면 지어내지 말고 모른다고 답하고, 
+                      있는 문서는 출처를 출력하세요."""
     )
 
     # Langgraph Node 함수에서는 ainvoke를 써야 비동기 스트리밍이 매끄럽습니다.
@@ -90,7 +89,11 @@ async def create_supervisor_app(checkpointer=None):
     mcp_agent = create_agent(
         llm, 
         tools=mcp_tools,
-        system_prompt="당신은 외부 API와 Tavily 웹 검색 도구를 사용하여 실시간 답변을 제공하는 전문 워커입니다. 반드시 tavily_search 또는 tavily_research 등 제공된 도구를 호출한 결과에만 의존하여 답변하세요. 절대로 도구를 호출하지 않고 자체 지식으로 답변하지 마세요."
+        system_prompt="""당신은 외부 API를 사용하여 주식, 날씨 또는 
+                        Tavily Search로 검색을 한 결과,
+                        위키 라는 단어가 들어있으면 위키피디아에서 검색한 결과를
+                        실시간 답변을 제공하는 전문 워커입니다. 
+                        절대로 도구를 호출하지 않고 자체 지식으로 답변하지 마세요."""
     )
 
     async def mcp_node(state):
