@@ -1,4 +1,4 @@
-# 01 LLM Agent Project
+# 1 LLM Agent Project
 
 LangGraph 기반 Supervisor 멀티 에이전트 + RAG + MCP + SSE 스트리밍 예제입니다.
 
